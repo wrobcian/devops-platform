@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-platform
+  labels:
+    app: devops-platform
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: devops-platform
+  template:
+    metadata:
+      labels:
+        app: devops-platform
+    spec:
+      containers:
+        - name: web
+          image: devops-platform:1.0.0
+          ports:
+            - containerPort: 5000
+          env:
+            - name: ENVIRONMENT
+              value: "production"
+            - name: APP_VERSION
+              value: "1.0.0"
+            - name: PORT
+              value: "5000"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
