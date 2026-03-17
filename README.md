@@ -19,7 +19,7 @@ Full DevOps project demonstrating containerization, CI/CD, Infrastructure as Cod
 ## Quick Start
 
 ```bash
-git clone https://github.com/TWOJ_USER/devops-platform.git
+git clone https://github.com/wrobcian/devops-platform.git
 cd devops-platform
 
 docker build -t devops-platform -f docker/Dockerfile .
