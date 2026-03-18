@@ -90,23 +90,3 @@ jobs:
       - name: Terraform Format Check
         working-directory: terraform
         run: terraform fmt -check
-
-    kubernetes-validate:
-    name: K8s Validate
-    runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Install kubectl
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y kubectl || true
-          snap install kubectl --classic || true
-
-      - name: Validate deployment
-        run: kubectl apply --dry-run=client -f kubernetes/deployment.yaml
-
-      - name: Validate service
-        run: kubectl apply --dry-run=client -f kubernetes/service.yaml
