@@ -91,15 +91,22 @@ jobs:
         working-directory: terraform
         run: terraform fmt -check
 
-  kubernetes-validate:
+    kubernetes-validate:
     name: K8s Validate
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - name: Validate Kubernetes manifests
+      - name: Install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          ./kubectl apply --dry-run=client -f kubernetes/deployment.yaml
-          ./kubectl apply --dry-run=client -f kubernetes/service.yaml
+          sudo apt-get update
+          sudo apt-get install -y kubectl || true
+          snap install kubectl --classic || true
+
+      - name: Validate deployment
+        run: kubectl apply --dry-run=client -f kubernetes/deployment.yaml
+
+      - name: Validate service
+        run: kubectl apply --dry-run=client -f kubernetes/service.yaml
